@@ -24,6 +24,15 @@ const commands = [
         .setDescription("Gemini に聞きたいこと")
         .setRequired(true),
     ),
+  new SlashCommandBuilder()
+    .setName("subnet")
+    .setDescription("IPv4サブネットを計算します")
+    .addStringOption((option) =>
+      option
+        .setName("cidr")
+        .setDescription("例: 192.168.1.10/24")
+        .setRequired(true),
+    ),
 ].map((command) => command.toJSON());
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -33,7 +42,7 @@ try {
   await client.login(DISCORD_TOKEN);
   await ready;
   await client.application.commands.set(commands);
-  console.log("/ask コマンドを登録しました。");
+  console.log("/ask と /subnet コマンドを登録しました。");
 } catch (error) {
   console.error("コマンドの登録に失敗しました:", error);
   process.exitCode = 1;

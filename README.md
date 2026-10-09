@@ -2,6 +2,8 @@
 
 Discord の `/ask` コマンドで質問し、Gemini API の回答を受け取る最小構成の Node.js Bot です。
 
+`/subnet` コマンドでは、IPv4のCIDRからネットワーク情報を自動計算できます。
+
 ## 事前に用意するもの
 
 - Node.js 20 以上
@@ -52,6 +54,12 @@ npm start
 
 ```text
 /ask question: 日本の首都は？
+```
+
+サブネット計算は次のように使います。
+
+```text
+/subnet cidr: 192.168.1.10/24
 ```
 
 Botを止めるときは、ターミナルで `Ctrl + C` を押します。
