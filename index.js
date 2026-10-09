@@ -65,6 +65,39 @@ function calculateSubnet(cidr) {
   ].join("\n");
 }
 
+const retryableStatuses = new Set([429, 500, 502, 503, 504]);
+
+function wait(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+async function askGeminiWithRetry(question, maxAttempts = 3) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      return await ai.models.generateContent({
+        model: "gemini-3.8-flash",
+        contents: question,
+      });
+    } catch (error) {
+      const shouldRetry =
+        retryableStatuses.has(error.status) && attempt < maxAttempts;
+
+      if (!shouldRetry) {
+        throw error;
+      }
+
+      const delay = 1000 * 2 ** (attempt - 1);
+      console.warn(
+        `Gemini APIが一時エラーを返しました。${delay}ms後に再試行します ` +
+          `(${attempt}/${maxAttempts})。`,
+      );
+      await wait(delay);
+    }
+  }
+
+  throw new Error("Gemini APIの再試行回数を超えました。");
+}
+
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) {
     return;
@@ -88,10 +121,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
   try {
     const question = interaction.options.getString("question", true);
-    const response = await ai.models.generateContent({
-      model: "gemini-3.8-flash",
-      contents: question,
-    });
+    const response = await askGeminiWithRetry(question);
     const answer = response.text?.trim() || "回答を生成できませんでした。";
 
     // Discord の1メッセージ上限に合わせて、長い回答は複数回に分けます。
