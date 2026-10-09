@@ -1,7 +1,8 @@
 import "dotenv/config";
 
 import { GoogleGenAI } from "@google/genai";
-import { Client, Events, GatewayIntentBits, MessageFlags } from "discord.js";
+import { Client, Events, GatewayIntentBits } from "discord.js";
+import { createServer } from "node:http";
 
 const { DISCORD_TOKEN, GEMINI_API_KEY } = process.env;
 
@@ -12,6 +13,17 @@ if (!DISCORD_TOKEN || !GEMINI_API_KEY) {
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+const port = Number(process.env.PORT) || 3000;
+
+// Render の無料 Web Service が稼働確認できるようにHTTPで応答します。
+const server = createServer((_request, response) => {
+  response.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+  response.end("Discord Gemini Bot is running.\n");
+});
+
+server.listen(port, "0.0.0.0", () => {
+  console.log(`稼働確認用サーバーをポート ${port} で起動しました。`);
+});
 
 client.once(Events.ClientReady, (readyClient) => {
   console.log(`${readyClient.user.tag} としてログインしました。`);

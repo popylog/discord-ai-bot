@@ -56,6 +56,16 @@ npm start
 
 Botを止めるときは、ターミナルで `Ctrl + C` を押します。
 
+## Renderへ無料で公開する
+
+Renderでは「Background Worker」ではなく「Web Service」を選び、無料プランを使用します。
+
+- Build Command: `npm install`
+- Start Command: `npm start`
+- Instance Type: `Free`
+
+Environment Variablesには `DISCORD_TOKEN` と `GEMINI_API_KEY` を登録してください。値をGitHubへ保存してはいけません。
+
 ## うまく動かないとき
 
 - `/ask` が表示されない: コマンド登録を実行し、数分待ってDiscordを開き直してください。
