@@ -1,0 +1,20 @@
+{
+  "name": "discord-ai-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Discord の /ask コマンドから Gemini API に質問する最小構成の Bot",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "deploy-commands": "node deploy-commands.js",
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@google/genai": "^2.28.0",
+    "discord.js": "^14.27.0",
+    "dotenv": "^17.2.3"
+  }
+}
