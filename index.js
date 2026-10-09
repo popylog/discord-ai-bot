@@ -65,6 +65,28 @@ function calculateSubnet(cidr) {
   ].join("\n");
 }
 
+function calculateSubnetForHosts(requiredHosts) {
+  for (let prefix = 32; prefix >= 0; prefix -= 1) {
+    const totalAddresses = 2 ** (32 - prefix);
+    const usableHosts = prefix === 32 ? 1 : prefix === 31 ? 2 : totalAddresses - 2;
+
+    if (usableHosts >= requiredHosts) {
+      const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
+
+      return [
+        `必要ホスト数: ${requiredHosts.toLocaleString("ja-JP")}`,
+        `推奨CIDR: /${prefix}`,
+        `サブネットマスク: ${integerToIp(mask)}`,
+        `総アドレス数: ${totalAddresses.toLocaleString("ja-JP")}`,
+        `利用可能ホスト数: ${usableHosts.toLocaleString("ja-JP")}`,
+        `余裕: ${(usableHosts - requiredHosts).toLocaleString("ja-JP")}`,
+      ].join("\n");
+    }
+  }
+
+  throw new Error("指定されたホスト数をIPv4サブネットに収容できません。");
+}
+
 const retryableStatuses = new Set([429, 500, 502, 503, 504]);
 
 function wait(milliseconds) {
@@ -110,6 +132,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
     } catch (error) {
       await interaction.reply({ content: error.message, ephemeral: true });
     }
+    return;
+  }
+
+  if (interaction.commandName === "subnet-hosts") {
+    const hosts = interaction.options.getInteger("hosts", true);
+    await interaction.reply(
+      `\`\`\`text\n${calculateSubnetForHosts(hosts)}\n\`\`\``,
+    );
     return;
   }
 

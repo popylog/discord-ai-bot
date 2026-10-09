@@ -33,6 +33,17 @@ const commands = [
         .setDescription("例: 192.168.1.10/24")
         .setRequired(true),
     ),
+  new SlashCommandBuilder()
+    .setName("subnet-hosts")
+    .setDescription("必要ホスト数から最小のIPv4サブネットを計算します")
+    .addIntegerOption((option) =>
+      option
+        .setName("hosts")
+        .setDescription("必要なホスト数（例: 50）")
+        .setMinValue(1)
+        .setMaxValue(4294967294)
+        .setRequired(true),
+    ),
 ].map((command) => command.toJSON());
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -42,7 +53,7 @@ try {
   await client.login(DISCORD_TOKEN);
   await ready;
   await client.application.commands.set(commands);
-  console.log("/ask と /subnet コマンドを登録しました。");
+  console.log("/ask、/subnet、/subnet-hosts コマンドを登録しました。");
 } catch (error) {
   console.error("コマンドの登録に失敗しました:", error);
   process.exitCode = 1;
