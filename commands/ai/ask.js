@@ -17,7 +17,7 @@ export default {
     const question = interaction.options.getString("question", true);
     const response = await askGeminiWithRetry(question);
     const answer = response.text?.trim() || "回答を生成できませんでした。";
-    const chunks = answer.match(/[sS]{1,2000}/g) ?? [answer];
+    const chunks = answer.match(/[\s\S]{1,2000}/g) ?? [answer];
 
     await interaction.editReply(chunks.shift());
     for (const chunk of chunks) {
