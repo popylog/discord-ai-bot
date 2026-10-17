@@ -15,7 +15,7 @@ export default {
   async execute(interaction) {
     try {
       const cidr = interaction.options.getString("cidr", true);
-      await interaction.reply(````text\n${calculateSubnet(cidr)}\n````);
+      await interaction.reply(`\`\`\`text\n${calculateSubnet(cidr)}\n\`\`\``);
     } catch (error) {
       await interaction.reply({
         content: error.message,
