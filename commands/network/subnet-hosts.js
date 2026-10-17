@@ -17,7 +17,7 @@ export default {
   async execute(interaction) {
     const hosts = interaction.options.getInteger("hosts", true);
     await interaction.reply(
-      ````text\n${calculateSubnetForHosts(hosts)}\n````,
+      `\`\`\`text\n${calculateSubnetForHosts(hosts)}\n\`\`\``,
     );
   },
 };
