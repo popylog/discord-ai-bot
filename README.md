@@ -8,6 +8,8 @@ Gemini APIが混雑などで一時エラーを返した場合は、自動的に�
 
 `/subnet-hosts` コマンドでは、必要ホスト数から最小のIPv4サブネットを逆算できます。
 
+`/help` コマンドでは、AI・ネットワーク・共通管理の部門別に機能一覧を表示できます。
+
 ## 事前に用意するもの
 
 - Node.js 20 以上
@@ -95,8 +97,14 @@ Environment Variablesには `DISCORD_TOKEN` と `GEMINI_API_KEY` を登録して
 
 ```text
 discord-ai-bot/
-├── index.js             # Bot本体
-├── deploy-commands.js   # /ask コマンドの登録
+├── commands/
+│   ├── ai/              # AI部門のコマンド
+│   ├── network/         # ネットワーク部門のコマンド
+│   ├── utility/         # 共通・管理部門のコマンド
+│   └── index.js         # 全コマンドの一覧
+├── services/            # Gemini・計算・稼働確認の共通処理
+├── index.js             # Bot本体とコマンド振り分け
+├── deploy-commands.js   # Discordへのコマンド登録
 ├── package.json         # 必要なライブラリと起動コマンド
 ├── .gitignore           # 秘密情報などをGit管理から除外
 └── README.md            # この説明書
